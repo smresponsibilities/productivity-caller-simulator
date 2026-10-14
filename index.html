@@ -4,65 +4,56 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Productivity Caller vs Traditional Reminder Apps (TickTick, Todoist, Google Tasks)</title>
-<meta name="description" content="Interactive simulator comparing native Android phone call reminders against push notification blindness. Built with Kotlin, Telecom API, and deterministic NLP.">
+<meta name="description" content="Interactive simulator and comparison: Productivity Caller vs TickTick, Todoist, and Google Tasks. Compare phone call alerts against push notification blindness.">
 <link rel="canonical" href="https://shivammahajan.com/projects/productivity-caller-vs-alternatives/">
 <meta name="author" content="Shivam Mahajan">
 <meta property="og:title" content="Productivity Caller vs Traditional Reminder Apps">
 <meta property="og:description" content="Compare Android phone call reminders vs push notification blindness. Built by Shivam Mahajan.">
 <meta property="og:url" content="https://shivammahajan.com/projects/productivity-caller-vs-alternatives/">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #F4EFE6;
-  --ink: #302E43;
-  --card: #FFFAF2;
-  --line: #DED4C3;
-  --muted: #7D7589;
-  --accent: #597445;
-  --accent-purple: #71598C;
-  --signal: #F3D697;
-  --on-signal: #302E43;
-  --good: #388E3C;
-  --warn: #E65100;
-  --bad: #D32F2F;
-  --phone-bg: #141724;
-  --font-mono: 'JetBrains Mono', monospace;
+  --bg: #e9eddd;
+  --paper: #fcf7e9;
+  --ink: #313b30;
+  --muted: #6d725e;
+  --line: #dfdfca;
+  --green: #526b47;
+  --green-shadow: #354c2d;
+  --sage: #e8edd8;
+  --yellow: #f4d378;
+  --bad: #c84236;
+  --phone-bg: #182017;
   box-sizing: border-box;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #15141D;
-    --ink: #F4EFE6;
-    --card: #201E2B;
-    --line: #332F42;
-    --muted: #A39BAC;
-    --accent: #87A96B;
-    --accent-purple: #A58AC4;
-    --signal: #F3D697;
-    --on-signal: #15141D;
-    --good: #4CAF50;
-    --warn: #FFB74D;
-    --bad: #E57373;
-    --phone-bg: #0C0B12;
+    --bg: #151814;
+    --paper: #1e241d;
+    --ink: #f0f4ea;
+    --muted: #9aa28f;
+    --line: #2d362a;
+    --green: #6a8c5c;
+    --green-shadow: #22301c;
+    --sage: #2a3528;
+    --yellow: #f4d378;
+    --bad: #e57373;
+    --phone-bg: #0f140e;
   }
 }
 
 :root[data-theme="dark"] {
-  --bg: #15141D;
-  --ink: #F4EFE6;
-  --card: #201E2B;
-  --line: #332F42;
-  --muted: #A39BAC;
-  --accent: #87A96B;
-  --accent-purple: #A58AC4;
-  --signal: #F3D697;
-  --on-signal: #15141D;
-  --good: #4CAF50;
-  --warn: #FFB74D;
-  --bad: #E57373;
-  --phone-bg: #0C0B12;
+  --bg: #151814;
+  --paper: #1e241d;
+  --ink: #f0f4ea;
+  --muted: #9aa28f;
+  --line: #2d362a;
+  --green: #6a8c5c;
+  --green-shadow: #22301c;
+  --sage: #2a3528;
+  --yellow: #f4d378;
+  --bad: #e57373;
+  --phone-bg: #0f140e;
 }
 
 * { box-sizing: border-box; }
@@ -70,362 +61,381 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font: 400 16px/1.55 "Bricolage Grotesque", system-ui, -apple-system, sans-serif;
-  transition: background 0.25s, color 0.25s;
+  font: 15px/1.55 Inter, system-ui, -apple-system, sans-serif;
 }
 
-main { max-width: 1080px; margin: 0 auto; padding: 36px 20px 64px; }
-h1 { font-size: clamp(32px, 5.5vw, 50px); line-height: 1.05; margin: 0 0 16px; font-weight: 800; letter-spacing: -0.025em; text-wrap: balance; }
-h2 { font-size: 26px; margin: 48px 0 12px; font-weight: 700; letter-spacing: -0.015em; }
-p.lead { font-size: 19px; color: var(--muted); max-width: 66ch; margin: 0 0 22px; line-height: 1.5; }
-.sub { color: var(--muted); margin: 0 0 18px; max-width: 66ch; font-size: 15px; }
+main { max-width: 980px; margin: 0 auto; padding: 36px 18px 64px; }
+
+h1 {
+  font: normal clamp(34px, 5.5vw, 54px)/1.06 Georgia, serif;
+  letter-spacing: -1.5px;
+  margin: 0 0 14px;
+  color: var(--ink);
+}
+h2 {
+  font: normal 26px/1.2 Georgia, serif;
+  letter-spacing: -0.6px;
+  margin: 44px 0 10px;
+}
+p.lead {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 62ch;
+  margin: 0 0 20px;
+}
+.sub {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0 0 16px;
+  max-width: 62ch;
+}
 
 a.cta {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: var(--ink);
-  color: var(--bg);
-  padding: 13px 24px;
+  background: var(--green);
+  color: #fffdf0;
+  padding: 12px 22px;
   border-radius: 12px;
-  font-weight: 700;
+  font-weight: 600;
   text-decoration: none;
-  font-size: 15px;
-  transition: transform 0.15s, opacity 0.15s;
+  font-size: 14px;
+  box-shadow: 0 3px 0 var(--green-shadow);
+  transition: transform 0.12s;
 }
-a.cta:hover { transform: translateY(-1px); opacity: 0.95; }
+a.cta:hover { transform: translateY(-1px); }
 
-.badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 30px; }
+.badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 28px; }
 .badges span {
-  background: var(--card);
-  border: 1px solid var(--line);
+  background: var(--sage);
   color: var(--ink);
   font-weight: 600;
   padding: 6px 14px;
   border-radius: 999px;
   font-size: 13px;
+  border: 1px solid var(--line);
 }
-.badges span.gold { background: var(--signal); color: var(--on-signal); border-color: var(--signal); }
+.badges span.gold { background: var(--yellow); color: #313b30; }
 
-.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
 .chip {
-  border: 1.5px solid var(--line);
-  background: var(--card);
+  border: 1px solid var(--line);
+  background: var(--paper);
   color: var(--ink);
-  padding: 9px 16px;
+  padding: 8px 15px;
   border-radius: 999px;
   font: inherit;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.15s;
 }
 .chip:hover { border-color: var(--ink); }
-.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 
-/* Simulator Grid */
+/* Simulator Section */
 .sim {
   display: grid;
   grid-template-columns: minmax(0, 310px) minmax(0, 1fr);
-  gap: 32px;
+  gap: 28px;
   align-items: start;
-  margin-top: 20px;
 }
-@media (max-width: 780px) { .sim { grid-template-columns: 1fr; } }
+@media (max-width: 740px) { .sim { grid-template-columns: 1fr; } }
 
-/* Phone Device */
+/* Phone Frame */
 .phone {
   width: 100%;
   max-width: 310px;
-  aspect-ratio: 9/18;
+  aspect-ratio: 9/17.5;
   margin: 0 auto;
-  border: 10px solid var(--ink);
-  border-radius: 40px;
+  border: 8px solid var(--ink);
+  border-radius: 36px;
   background: var(--phone-bg);
   color: #fff;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 24px 48px -12px rgba(48, 46, 67, 0.35);
+  box-shadow: 0 16px 48px rgba(49, 59, 48, 0.22);
 }
-.phone .notch {
-  width: 90px;
-  height: 18px;
-  background: var(--ink);
-  margin: 0 auto;
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
-}
-.phone .time { text-align: center; padding-top: 20px; font-size: 52px; font-weight: 200; line-height: 1; }
-.phone .date { text-align: center; font-size: 13px; opacity: 0.65; margin-top: 4px; font-weight: 500; }
+.phone .time { text-align: center; padding-top: 28px; font-size: 52px; font-weight: 200; line-height: 1; }
+.phone .date { text-align: center; font-size: 13px; opacity: 0.7; margin-top: 4px; }
 
 /* Push Banner */
 .banner {
   position: absolute;
-  left: 12px;
-  right: 12px;
-  top: -140px;
-  background: rgba(255, 250, 242, 0.96);
-  color: #302E43;
-  border-radius: 18px;
+  left: 10px;
+  right: 10px;
+  top: -120px;
+  background: rgba(252, 247, 233, 0.96);
+  color: #313b30;
+  border-radius: 16px;
   padding: 12px 14px;
   font-size: 13px;
-  box-shadow: 0 12px 28px rgba(0,0,0,0.35);
-  transition: top 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  transition: top 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 .banner.show { top: 120px; }
-.banner .app-icon { width: 36px; height: 36px; border-radius: 10px; background: #E8DED1; display: grid; place-items: center; flex-shrink: 0; font-size: 18px; }
+.banner .app-ico { width: 34px; height: 34px; border-radius: 9px; background: #e0e5d1; display: grid; place-items: center; font-size: 18px; flex-shrink: 0; }
 .banner b { display: block; font-size: 13px; font-weight: 700; }
 .banner span { font-size: 12px; opacity: 0.8; }
 
-/* Incoming Call Screen */
+/* Incoming Call View */
 .call {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 25%, #232233 0%, #0E0D14 100%);
+  background: radial-gradient(circle at 50% 25%, #243022 0%, #10160f 100%);
   display: none;
   flex-direction: column;
   justify-content: space-between;
-  padding: 16px 18px 30px;
+  padding: 16px 16px 28px;
   z-index: 2;
 }
 .call.show { display: flex; }
 
-.call-header { text-align: center; margin-top: 8px; }
-.call-header small { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.75; color: var(--signal); font-weight: 600; }
-.call-header .cname { font-size: 23px; font-weight: 700; margin-top: 3px; }
-.call-header .csub { font-size: 12px; opacity: 0.7; margin-top: 2px; }
+.call-top { text-align: center; margin-top: 6px; }
+.call-top small { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--yellow); font-weight: 600; }
+.call-top .cname { font-size: 22px; font-weight: 700; margin-top: 3px; }
+.call-top .csub { font-size: 12px; opacity: 0.7; margin-top: 2px; }
 
-/* Canvas Mascot in Call Screen */
-.mascot-stage {
-  width: 140px;
-  height: 140px;
-  margin: 12px auto;
+/* Tuxedo Cat Mascot Avatar */
+.cat-avatar {
+  width: 110px;
+  height: 110px;
+  margin: 10px auto;
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
 }
-#mascotCanvas {
+.cat-avatar svg {
   width: 100%;
   height: 100%;
-  border-radius: 24px;
-  cursor: pointer;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.4));
 }
-.pulse-wave {
+.call-ring-wave {
   position: absolute;
-  inset: -8px;
-  border-radius: 32px;
-  border: 2px solid var(--signal);
+  inset: -10px;
+  border-radius: 50%;
+  border: 2px solid var(--yellow);
   opacity: 0;
   pointer-events: none;
 }
-.ringing .pulse-wave { animation: pulseOut 1.8s infinite ease-out; }
-.ringing .pulse-wave:nth-child(2) { animation-delay: 0.6s; }
-.ringing .pulse-wave:nth-child(3) { animation-delay: 1.2s; }
+.ringing .call-ring-wave { animation: ringPulse 1.8s infinite ease-out; }
+.ringing .call-ring-wave:nth-child(2) { animation-delay: 0.6s; }
 
-@keyframes pulseOut {
-  0% { transform: scale(0.9); opacity: 0.75; }
+@keyframes ringPulse {
+  0% { transform: scale(0.85); opacity: 0.8; }
   100% { transform: scale(1.4); opacity: 0; }
 }
 
 .ctask-pill {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.09);
   border: 1px solid rgba(255, 255, 255, 0.15);
   padding: 8px 14px;
   border-radius: 999px;
   font-size: 12px;
   text-align: center;
-  margin: 0 auto 14px;
+  margin: 0 auto 12px;
   max-width: 240px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* Call Actions */
+/* Call Buttons */
 .call-actions {
   display: flex;
   justify-content: space-around;
   align-items: center;
 }
-.cwrap { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; opacity: 0.9; }
+.cwrap { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; opacity: 0.9; }
 .cb {
-  width: 64px;
-  height: 64px;
+  width: 62px;
+  height: 62px;
   border-radius: 50%;
   border: none;
   display: grid;
   place-items: center;
   cursor: pointer;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
   transition: transform 0.15s;
 }
 .cb:hover { transform: scale(1.08); }
-.cb svg { width: 28px; height: 28px; fill: #fff; }
+.cb svg { width: 26px; height: 26px; fill: #fff; }
 .cb.red { background: var(--bad); }
 .cb.red svg { transform: rotate(135deg); }
-.cb.green { background: var(--good); }
-.ringing .cb.green { animation: ringShake 0.8s infinite ease-in-out; }
-.cb.snooze { width: 44px; height: 44px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); }
+.cb.green { background: #3fa64a; }
+.ringing .cb.green { animation: ringWiggle 0.8s infinite ease-in-out; }
+.cb.snooze { width: 44px; height: 44px; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.2); }
 .cb.snooze svg { width: 18px; height: 18px; }
 
-@keyframes ringShake {
+@keyframes ringWiggle {
   0%, 100% { transform: rotate(0deg) scale(1); }
-  25% { transform: rotate(-8deg) scale(1.06); }
-  75% { transform: rotate(8deg) scale(1.06); }
+  25% { transform: rotate(-7deg) scale(1.05); }
+  75% { transform: rotate(7deg) scale(1.05); }
 }
 
-/* Control Panel */
+/* Panel & Log */
 .panel {
-  background: var(--card);
+  background: var(--paper);
   border: 1px solid var(--line);
-  border-radius: 20px;
-  padding: 24px;
-  box-shadow: 0 8px 24px rgba(48, 46, 67, 0.04);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 4px 18px rgba(49, 59, 48, 0.05);
 }
-.panel .task-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700; margin: 0 0 4px; }
-.panel .task-title { font-size: 20px; font-weight: 700; margin: 0 0 16px; }
+.panel .task-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); font-weight: 600; margin: 0 0 4px; }
+.panel .task-title { font-size: 19px; font-weight: 700; margin: 0 0 16px; color: var(--ink); }
 
-.btns { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
 button.act {
   font: inherit;
-  font-weight: 700;
-  border-radius: 12px;
-  padding: 12px 20px;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 10px 18px;
   border: 1.5px solid var(--line);
-  background: var(--card);
+  background: var(--paper);
   color: var(--ink);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.15s;
 }
 button.act:hover { border-color: var(--ink); }
-button.act.primary { background: var(--signal); border-color: var(--signal); color: var(--on-signal); }
+button.act.primary { background: var(--green); border-color: var(--green); color: #fffdf0; box-shadow: 0 2px 0 var(--green-shadow); }
 button.act.danger { background: var(--bad); border-color: var(--bad); color: #fff; }
 button.act:disabled { opacity: 0.4; cursor: not-allowed; }
 
-.audio-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: var(--muted);
-  cursor: pointer;
-  margin-top: 8px;
-}
-
 .log { list-style: none; margin: 16px 0 0; padding: 0; font-size: 14px; max-height: 220px; overflow: auto; border-top: 1px solid var(--line); }
-.log li { padding: 8px 0; border-bottom: 1px solid var(--line); display: flex; align-items: baseline; gap: 8px; }
-.log time { font-family: var(--font-mono); color: var(--muted); font-size: 12px; flex-shrink: 0; }
+.log li { padding: 7px 0; border-bottom: 1px solid var(--line); display: flex; align-items: baseline; gap: 8px; }
+.log time { font-family: monospace; color: var(--muted); font-size: 12px; }
 
 .verdict {
   margin-top: 14px;
-  padding: 12px 16px;
-  border-radius: 12px;
+  padding: 11px 15px;
+  border-radius: 10px;
   font-weight: 700;
-  font-size: 15px;
+  font-size: 14.5px;
   display: none;
 }
 .verdict.show { display: block; }
-.verdict.good { background: rgba(56, 142, 60, 0.12); color: var(--good); }
-.verdict.bad { background: rgba(211, 47, 47, 0.12); color: var(--bad); }
-.verdict.warn { background: rgba(230, 81, 0, 0.12); color: var(--warn); }
+.verdict.good { background: rgba(82, 107, 71, 0.15); color: var(--green); }
+.verdict.bad { background: rgba(200, 66, 54, 0.15); color: var(--bad); }
+.verdict.warn { background: rgba(244, 211, 120, 0.28); color: #8a6a12; }
 
-/* Table and Metrics */
-.scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 16px; background: var(--card); margin-top: 16px; }
-table { border-collapse: collapse; width: 100%; min-width: 680px; }
-th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--line); font-size: 14.5px; }
+/* Comparison Table */
+.scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); margin-top: 16px; }
+table { border-collapse: collapse; width: 100%; min-width: 660px; }
+th, td { padding: 13px 15px; text-align: left; border-bottom: 1px solid var(--line); font-size: 14px; }
 th { font-weight: 700; }
-th.pc, td.pc { background: rgba(243, 214, 151, 0.25); }
-tr.hl td, tr.hl th { background: rgba(243, 214, 151, 0.15); }
+th.pc, td.pc { background: rgba(244, 211, 120, 0.2); }
+tr.hl td, tr.hl th { background: rgba(244, 211, 120, 0.15); }
 
-.v2 { color: var(--good); font-weight: 700; }
-.v1 { color: var(--warn); font-weight: 600; }
+.v2 { color: var(--green); font-weight: 700; }
+.v1 { color: #8a6a12; font-weight: 600; }
 .v0 { color: var(--bad); font-weight: 500; }
 
-.score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 16px 0; }
-.score-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
-.score-card .n { font-size: 32px; font-weight: 800; line-height: 1; font-family: var(--font-mono); }
-.bar { height: 6px; background: var(--line); border-radius: 4px; margin-top: 8px; overflow: hidden; }
-.bar i { display: block; height: 100%; background: var(--signal); width: 0; transition: width 0.3s; }
+.score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 16px 0; }
+.score-card { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+.score-card .n { font-size: 28px; font-weight: 800; line-height: 1; font-family: Georgia, serif; }
+.bar { height: 5px; background: var(--line); border-radius: 3px; margin-top: 7px; overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--green); width: 0; transition: width 0.3s; }
 
-.specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 20px 0; }
-.spec-box { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
-.spec-box .val { font-size: 28px; font-weight: 800; font-family: var(--font-mono); color: var(--ink); }
-.spec-box .lbl { font-size: 13px; color: var(--muted); margin-top: 4px; font-weight: 600; }
+/* Specs Section */
+.specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 18px 0; }
+.spec-box { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+.spec-box .val { font-size: 26px; font-weight: 800; font-family: Georgia, serif; color: var(--ink); }
+.spec-box .lbl { font-size: 13px; color: var(--muted); margin-top: 4px; }
 
-.top { display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-bottom: 28px; }
-footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+.top { display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-bottom: 24px; }
+footer { margin-top: 44px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13.5px; }
 footer a { color: var(--ink); font-weight: 600; }
 </style>
 </head>
 <body>
 <main>
   <div class="top">
-    <div style="display:flex; align-items:center; gap:10px;">
-      <strong style="font-size:17px; font-weight:700;">Productivity Caller</strong>
-      <span style="font-size:12px; background:var(--card); border:1px solid var(--line); padding:3px 8px; border-radius:6px; color:var(--muted);">Sunroom Architecture</span>
-    </div>
+    <div style="font-weight:700; font-size:16px;">Cat Caller / Productivity Caller</div>
     <button class="chip" id="theme" type="button">Toggle Theme</button>
   </div>
 
-  <h1>A Real Android Phone Call, Not a Push Notification.</h1>
-  <p class="lead">Push notifications get swiped away alongside spam. Productivity Caller triggers a genuine incoming phone call via the Android Telecom API, demanding real attention for critical tasks. 100% offline, privacy-first, zero cloud accounts.</p>
+  <h1>A Real Phone Call, Not a Notification. Entirely Local.</h1>
+  <p class="lead">Push notifications get swiped away alongside spam. Productivity Caller makes your phone ring with a real incoming call on the native Android call screen, using the OS Telecom framework. 100% offline on your device: no cloud, no account, no AI service.</p>
 
   <div>
     <a class="cta" href="https://shivammahajan.com/projects/productivity-caller/" target="_blank" rel="noopener">
-      Read Technical Case Study →
+      Read Technical Case Study ↗
     </a>
   </div>
 
   <div class="badges">
-    <span class="gold">● Real Android Call</span>
-    <span>100% Local Storage</span>
-    <span>Zero Cloud Backend</span>
-    <span>Deterministic Regex NLP</span>
-    <span>No Subscription</span>
+    <span class="gold">Real Android Call</span>
+    <span>100% Local</span>
+    <span>Zero Cloud</span>
+    <span>Offline-First</span>
+    <span>Deterministic NLP</span>
   </div>
 
   <h2>Notification Simulator</h2>
-  <p class="sub">Pick an application, trigger a reminder, and experience why push notifications fail where phone calls succeed.</p>
+  <p class="sub">Pick an app, fire the reminder, then respond the way you really would on a busy afternoon.</p>
 
   <div class="chips" id="apps" role="group" aria-label="Choose an app"></div>
 
   <div class="sim">
     <!-- Phone Screen -->
     <div class="phone" id="phone">
-      <div class="notch"></div>
       <div class="time">4:58</div>
       <div class="date">Wednesday · Oct 14</div>
 
       <!-- Push Notification Banner -->
       <div class="banner" id="banner">
-        <div class="app-icon" id="bIcon">🔔</div>
+        <div class="app-ico" id="bIcon">🔔</div>
         <div>
           <b id="bApp">Todoist</b>
-          <span id="bText">Reminder: Send quarterly invoice</span>
+          <span id="bText">Reminder: Send invoice to client</span>
         </div>
       </div>
 
-      <!-- Incoming Call UI -->
+      <!-- Incoming Call View -->
       <div class="call" id="call">
-        <div class="call-header">
+        <div class="call-top">
           <small id="callSub">Incoming Call</small>
           <div class="cname">Productivity Caller</div>
-          <div class="csub">Task Reminder · Priority 1</div>
+          <div class="csub">Task Reminder · Priority High</div>
         </div>
 
-        <!-- Living Sine-Wave Mascot Avatar (Mathematical 120fps Canvas Cat) -->
-        <div class="mascot-stage">
-          <div class="pulse-wave"></div>
-          <div class="pulse-wave"></div>
-          <div class="pulse-wave"></div>
-          <canvas id="mascotCanvas" width="140" height="140" title="Tap Astra to interact"></canvas>
+        <!-- Tuxedo Cat Mascot Avatar -->
+        <div class="cat-avatar">
+          <div class="call-ring-wave"></div>
+          <div class="call-ring-wave"></div>
+          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <rect width="120" height="120" rx="30" fill="#243022"/>
+            <!-- Tuxedo Cat Torso & Head -->
+            <path d="M35 110 Q40 68 50 56 L44 32 L56 42 Q60 40 64 42 L76 32 L70 56 Q80 68 85 110 Z" fill="#313b30"/>
+            <!-- Ears interior -->
+            <polygon points="46,37 50,44 45,47" fill="#dfbdce"/>
+            <polygon points="74,37 70,44 75,47" fill="#dfbdce"/>
+            <!-- White Tuxedo Chest -->
+            <path d="M52 64 Q60 62 68 64 Q66 88 60 96 Q54 88 52 64 Z" fill="#fcf7e9"/>
+            <!-- Eyes (Gold slit) -->
+            <ellipse cx="53" cy="52" rx="3" ry="4" fill="#f4d378"/>
+            <ellipse cx="67" cy="52" rx="3" ry="4" fill="#f4d378"/>
+            <ellipse cx="53" cy="52" rx="1" ry="3" fill="#182017"/>
+            <ellipse cx="67" cy="52" rx="1" ry="3" fill="#182017"/>
+            <!-- Nose & Whiskers -->
+            <polygon points="59,57 61,57 60,59" fill="#dfbdce"/>
+            <line x1="42" y1="58" x2="32" y2="56" stroke="#fcf7e9" stroke-width="1"/>
+            <line x1="42" y1="60" x2="33" y2="62" stroke="#fcf7e9" stroke-width="1"/>
+            <line x1="78" y1="58" x2="88" y2="56" stroke="#fcf7e9" stroke-width="1"/>
+            <line x1="78" y1="60" x2="87" y2="62" stroke="#fcf7e9" stroke-width="1"/>
+            <!-- Cat Holding Phone -->
+            <rect x="70" y="66" width="14" height="24" rx="3" fill="#10160f" stroke="#526b47" stroke-width="1.5"/>
+            <!-- Paw on phone -->
+            <ellipse cx="70" cy="78" rx="4" ry="4" fill="#fcf7e9"/>
+          </svg>
         </div>
 
-        <div class="ctask-pill" id="callTask">Send quarterly invoice to client</div>
+        <div class="ctask-pill" id="callTask">Send invoice to client (due 5:00 PM)</div>
 
         <!-- Call Buttons -->
         <div class="call-actions">
@@ -436,7 +446,7 @@ footer a { color: var(--ink); font-weight: 600; }
             <span>Decline</span>
           </div>
           <div class="cwrap">
-            <button type="button" class="cb snooze" id="btnSnooze" aria-label="Snooze 10m">
+            <button type="button" class="cb snooze" id="btnSnooze" aria-label="Snooze 10 minutes">
               <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/></svg>
             </button>
             <span>+10m</span>
@@ -451,310 +461,63 @@ footer a { color: var(--ink); font-weight: 600; }
       </div>
     </div>
 
-    <!-- Interactive Control Panel -->
+    <!-- Simulator Control Panel -->
     <div class="panel">
       <div class="task-label">Active Scenario</div>
-      <div class="task-title">Critical Task: Send Quarterly Invoice (Due 5:00 PM)</div>
+      <div class="task-title">Task: Send invoice to client (Due 5:00 PM)</div>
       <div class="btns" id="ctrl"></div>
-      <label class="audio-toggle">
-        <input type="checkbox" id="chkAudio" checked>
-        Enable synthesized audio (26Hz purr + incoming chime)
-      </label>
       <div class="verdict" id="verdict"></div>
       <ul class="log" id="log"></ul>
     </div>
   </div>
 
   <h2>Feature Comparison Matrix</h2>
-  <p class="sub">Filter by what matters to your workflow to see weighted performance scores.</p>
-  <div class="chips" id="prefs" role="group" aria-label="Filter priorities"></div>
+  <p class="sub">Select what matters to your workflow. Matching capabilities highlight and scores update.</p>
+  <div class="chips" id="prefs" role="group" aria-label="Filter features"></div>
   <div class="score-grid" id="score"></div>
   <div class="scroll">
     <table id="tbl"></table>
   </div>
 
-  <h2>Engineering & Codebase Specs</h2>
+  <h2>Under the Hood & Technical Metrics</h2>
+  <p class="sub">Author-supplied implementation snapshot. Everything runs locally on device without cloud servers.</p>
   <div class="specs-grid">
-    <div class="spec-box"><div class="val">25,310</div><div class="lbl">Lines of 100% Kotlin</div></div>
-    <div class="spec-box"><div class="val">425+</div><div class="lbl">Unit & Integration Tests</div></div>
-    <div class="spec-box"><div class="val">80+</div><div class="lbl">NLP Datetime Permutations</div></div>
-    <div class="spec-box"><div class="val">&lt;3 ms</div><div class="lbl">Deterministic Parse Latency</div></div>
+    <div class="spec-box"><div class="val">25,310</div><div class="lbl">Lines of 100% Kotlin · 76 files</div></div>
+    <div class="spec-box"><div class="val">425+</div><div class="lbl">Unit & integration tests</div></div>
+    <div class="spec-box"><div class="val">80+</div><div class="lbl">NLP datetime forms recognized</div></div>
+    <div class="spec-box"><div class="val">&lt;3 ms</div><div class="lbl">On-device parse latency, zero cloud</div></div>
   </div>
 
   <footer>
-    <p>Architecture case study by <strong><a href="https://shivammahajan.com/">Shivam Mahajan</a></strong>, Software Engineer.</p>
-    <p>Explore the full portfolio at <a href="https://shivammahajan.com/">shivammahajan.com</a> or view the <a href="https://shivammahajan.com/projects/productivity-caller-vs-alternatives/">detailed alternatives matrix</a>.</p>
+    <p>Created by <strong><a href="https://shivammahajan.com/">Shivam Mahajan</a></strong>, Software Engineer.</p>
+    <p>Read the <a href="https://shivammahajan.com/projects/productivity-caller/">Official Case Study</a> or see the <a href="https://shivammahajan.com/projects/productivity-caller-vs-alternatives/">Alternatives Comparison Page</a>.</p>
   </footer>
 </main>
 
 <script>
 (function(){
-  // =========================================================================
-  // 1. PROCEDURAL SINE-WAVE MASCOT ENGINE (FROM SUNROOM V2)
-  // =========================================================================
-  var canvas = document.getElementById('mascotCanvas');
-  var ctx = canvas.getContext('2d');
-  var currentMood = 'IDLE_NAP'; // 'IDLE_NAP', 'ATTENTIVE_CALL', 'CELEBRATION'
-  var tapTime = -100;
-
-  function renderMascot(time) {
-    var w = 140, h = 140;
-    var scale = 0.52;
-    ctx.clearRect(0, 0, w, h);
-    ctx.save();
-
-    var cx = w / 2;
-    var cy = h / 2 + 10 * scale;
-
-    var dt = time - tapTime;
-    var tapRecoil = 0;
-    if (dt >= 0 && dt <= 2.2) {
-      tapRecoil = Math.exp(-2.4 * dt) * Math.sin(10.0 * dt) * (20 * scale);
-    }
-
-    var bFreq = currentMood === 'ATTENTIVE_CALL' ? 3.1 : 2.2;
-    var breathY = (Math.sin(time * bFreq) * 5.0 + Math.sin(time * bFreq * 2.0 - 0.78) * 1.8) * scale;
-
-    var bodyInk = '#302E43';
-    var bellyCream = '#FFFAF2';
-    var phoneGreen = '#597445';
-    var eyeGold = '#F3D697';
-
-    // 0. Ambient Ground Shadow
-    ctx.beginPath();
-    ctx.ellipse(cx, cy + 64 * scale, 68 * scale, 14 * scale, 0, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(48, 46, 67, 0.12)';
-    ctx.fill();
-
-    // 1. Traveling Wave Tail
-    var tailBaseX = cx + 38 * scale;
-    var tailBaseY = cy + 42 * scale;
-    var tailSegments = 20;
-    var tailLength = 80 * scale;
-    var swishSpeed = currentMood === 'ATTENTIVE_CALL' ? 5.0 : 2.0;
-    var maxAmp = currentMood === 'ATTENTIVE_CALL' ? 16 * scale : 8 * scale;
-
-    ctx.beginPath();
-    ctx.moveTo(tailBaseX, tailBaseY);
-    for (var i = 1; i <= tailSegments; i++) {
-      var s = i / tailSegments;
-      var waveOffset = Math.sin(time * swishSpeed - s * 3.6) * (s * maxAmp);
-      var px = tailBaseX + (s * tailLength) + waveOffset;
-      var py = tailBaseY - (Math.sin(s * 1.55) * 40 * scale);
-      ctx.lineTo(px, py);
-    }
-    ctx.strokeStyle = bodyInk;
-    ctx.lineWidth = 8 * scale;
-    ctx.lineCap = 'round';
-    ctx.stroke();
-
-    // 2. Harmonic Cat Body
-    var bodyCenterY = cy + breathY + tapRecoil;
-    ctx.beginPath();
-    var steps = 50;
-    var baseR = 56 * scale;
-    var archAmp = (currentMood === 'ATTENTIVE_CALL' ? 14 : 8) * scale;
-
-    for (var step = 0; step <= steps; step++) {
-      var angle = (step / steps) * Math.PI * 2;
-      var r = baseR + archAmp * Math.cos(angle) + (6 * scale) * Math.cos(2 * angle);
-      var px = cx + r * Math.cos(angle) * 1.2;
-      var py = bodyCenterY + r * Math.sin(angle);
-      if (step === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-    }
-    ctx.closePath();
-    ctx.fillStyle = bodyInk;
-    ctx.fill();
-
-    // Tuxedo Cream Belly Patch
-    ctx.beginPath();
-    var bellyR = baseR * 0.55;
-    for (var step = 0; step <= 30; step++) {
-      var a = (step / 30) * Math.PI * 2;
-      var px = (cx - 8 * scale) + bellyR * Math.cos(a) * 0.95;
-      var py = (bodyCenterY + 10 * scale) + bellyR * Math.sin(a) * 0.85;
-      if (step === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-    }
-    ctx.closePath();
-    ctx.fillStyle = bellyCream;
-    ctx.fill();
-
-    // 3. Cat Head & Ears
-    var headX = cx - 16 * scale;
-    var headY = cy - 34 * scale + (breathY * 0.35) + (tapRecoil * 1.25);
-    var headRadius = 32 * scale;
-    var earTwitch = Math.pow(Math.sin(time * 0.9), 11) * (6 * scale);
-
-    // Left Ear
-    ctx.beginPath();
-    ctx.moveTo(headX - 22 * scale, headY - 12 * scale);
-    ctx.lineTo(headX - 18 * scale + earTwitch, headY - 48 * scale);
-    ctx.lineTo(headX - 4 * scale, headY - 24 * scale);
-    ctx.closePath();
-    ctx.fillStyle = bodyInk;
-    ctx.fill();
-
-    // Right Ear
-    ctx.beginPath();
-    ctx.moveTo(headX + 4 * scale, headY - 24 * scale);
-    ctx.lineTo(headX + 20 * scale, headY - 48 * scale + (earTwitch * 0.4));
-    ctx.lineTo(headX + 24 * scale, headY - 12 * scale);
-    ctx.closePath();
-    ctx.fillStyle = bodyInk;
-    ctx.fill();
-
-    // Head Base
-    ctx.beginPath();
-    ctx.arc(headX, headY, headRadius, 0, Math.PI * 2);
-    ctx.fillStyle = bodyInk;
-    ctx.fill();
-
-    // Tuxedo Chin White Splash
-    ctx.beginPath();
-    ctx.arc(headX, headY + 14 * scale, 14 * scale, 0, Math.PI);
-    ctx.fillStyle = bellyCream;
-    ctx.fill();
-
-    // 4. Clamped Cosine Eyes (Blink logic)
-    var blinkCycle = time % 4.3;
-    var eyeScale = currentMood === 'IDLE_NAP' ? 0.12 : (blinkCycle < 0.16 ? Math.max(0.08, 1.0 - Math.sin((blinkCycle / 0.16) * Math.PI)) : 1.0);
-
-    [-1, 1].forEach(function(side) {
-      var ex = headX + (side * 12 * scale);
-      var ey = headY - 3 * scale;
-      ctx.beginPath();
-      ctx.ellipse(ex, ey, 5.5 * scale, 7 * scale * eyeScale, 0, 0, Math.PI * 2);
-      ctx.fillStyle = eyeGold;
-      ctx.fill();
-
-      if (eyeScale > 0.4) {
-        ctx.beginPath();
-        ctx.ellipse(ex, ey, 2.2 * scale, 5.5 * scale * eyeScale, 0, 0, Math.PI * 2);
-        ctx.fillStyle = bodyInk;
-        ctx.fill();
-      }
-    });
-
-    // Whiskers
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
-    ctx.lineWidth = 1.2 * scale;
-    [-1, 1].forEach(function(side) {
-      var wx = headX + (side * 10 * scale);
-      var wy = headY + 10 * scale;
-      ctx.beginPath();
-      ctx.moveTo(wx, wy);
-      ctx.lineTo(wx + (side * 20 * scale), wy - 2 * scale);
-      ctx.stroke();
-    });
-
-    // 5. Retro Phone in ATTENTIVE_CALL
-    if (currentMood === 'ATTENTIVE_CALL') {
-      var phoneArmX = cx - 42 * scale;
-      var phoneArmY = cy + 8 * scale + (Math.sin(time * 4.0) * 2 * scale);
-      ctx.save();
-      ctx.translate(phoneArmX, phoneArmY);
-      ctx.rotate(Math.sin(time * 3.5) * 0.12 - 0.2);
-      ctx.fillStyle = phoneGreen;
-      ctx.beginPath();
-      ctx.roundRect(-7 * scale, -20 * scale, 14 * scale, 40 * scale, 6 * scale);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(0, -20 * scale, 12 * scale, 0, Math.PI * 2);
-      ctx.arc(0, 20 * scale, 12 * scale, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    }
-
-    ctx.restore();
-  }
-
-  var startTime = performance.now();
-  function loop() {
-    var t = (performance.now() - startTime) / 1000;
-    renderMascot(t);
-    requestAnimationFrame(loop);
-  }
-  requestAnimationFrame(loop);
-
-  canvas.onclick = function() {
-    tapTime = (performance.now() - startTime) / 1000;
-    playMeow();
-  };
-
-  // =========================================================================
-  // 2. PROCEDURAL AUDIO (ZANZLANZ SINE WAVE SYNTHESIZER)
-  // =========================================================================
-  var audioCtx = null;
-  function getAudio() {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    return audioCtx;
-  }
-
-  function playChime() {
-    if (!document.getElementById("chkAudio").checked) return;
-    try {
-      var a = getAudio();
-      var osc = a.createOscillator();
-      var gain = a.createGain();
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(523.25, a.currentTime); // C5
-      osc.frequency.exponentialRampToValueAtTime(783.99, a.currentTime + 0.15); // G5
-      gain.gain.setValueAtTime(0.18, a.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, a.currentTime + 0.5);
-      osc.connect(gain);
-      gain.connect(a.destination);
-      osc.start();
-      osc.stop(a.currentTime + 0.5);
-    } catch(e){}
-  }
-
-  function playMeow() {
-    if (!document.getElementById("chkAudio").checked) return;
-    try {
-      var a = getAudio();
-      var osc = a.createOscillator();
-      var gain = a.createGain();
-      osc.type = "sine";
-      var t = a.currentTime;
-      osc.frequency.setValueAtTime(450, t);
-      osc.frequency.linearRampToValueAtTime(680, t + 0.12);
-      osc.frequency.linearRampToValueAtTime(390, t + 0.32);
-      gain.gain.setValueAtTime(0.01, t);
-      gain.gain.linearRampToValueAtTime(0.12, t + 0.08);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.32);
-      osc.connect(gain);
-      gain.connect(a.destination);
-      osc.start(t);
-      osc.stop(t + 0.32);
-    } catch(e){}
-  }
-
-  // =========================================================================
-  // 3. SIMULATOR LOGIC & APPS
-  // =========================================================================
   var APPS = [
-    {id:"pc", n:"Productivity Caller", icon:"🐾"},
-    {id:"tt", n:"TickTick", icon:"⏱️"},
-    {id:"td", n:"Todoist", icon:"🔴"},
-    {id:"gt", n:"Google Tasks", icon:"🔵"}
+    {id:"pc", n:"Productivity Caller", ico:"🐾"},
+    {id:"tt", n:"TickTick", ico:"⏱️"},
+    {id:"td", n:"Todoist", ico:"🔴"},
+    {id:"gt", n:"Google Tasks", ico:"🔵"}
   ];
 
   var ROWS = [
-    {k:"alert", l:"Alert Mechanism", v:[2,0,0,0], desc:"Incoming phone call (OS Telecom API) vs silent push banner", g:"call"},
-    {k:"wake", l:"Lockscreen Full Wake", v:[2,1,0,0], desc:"USE_FULL_SCREEN_INTENT overrides Doze mode and lockscreen", g:"call"},
-    {k:"hard", l:"Immune to Notification Blindness", v:[2,0,0,0], desc:"Cannot be swiped away with notifications; demands answer", g:"call"},
-    {k:"off", l:"100% Local / Zero Cloud Dependency", v:[2,1,0,0], desc:"Room SQLite on-device; no tracking or server downtime", g:"priv"},
-    {k:"nlp", l:"Deterministic NLP Quick Add", v:[2,2,2,0], desc:"80+ datetime forms, tags, priority; zero AI/cloud latency", g:"fast"},
-    {k:"cost", l:"Subscription Cost", v:[2,1,1,2], desc:"Free & open-core vs $3-$6/month recurring fees", g:"priv"},
-    {k:"team", l:"Team Collaboration & Sharing", v:[0,2,2,1], desc:"Multi-user assignees, project boards, and shared lists", g:"org"}
+    {k:"alert", l:"Real native Android call (Telecom API), not a notification", v:[2,0,0,0], g:"call"},
+    {k:"hard", l:"Hard to ignore or swipe away (solves notification blindness)", v:[2,0,0,0], g:"call"},
+    {k:"wake", l:"Full-screen lockscreen wake via USE_FULL_SCREEN_INTENT", v:[2,1,0,0], g:"call"},
+    {k:"off", l:"Runs locally: fully offline, no cloud account required", v:[2,1,1,0], g:"priv"},
+    {k:"nlp", l:"Natural-language quick add (80+ datetime forms, tags, priority)", v:[2,2,2,0], g:"fast"},
+    {k:"cost", l:"Subscription pricing", v:[2,1,1,2], g:"priv"},
+    {k:"team", l:"Sharing and multi-user collaboration", v:[0,2,2,1], g:"org"}
   ];
 
   var PREFS = [
-    {g:"call", l:"Reminders I Can't Ignore"},
-    {g:"priv", l:"Privacy & Offline-First"},
-    {g:"fast", l:"Fast NLP Capture"},
-    {g:"org", l:"Team Collaboration"}
+    {g:"call", l:"Reminders I can't ignore"},
+    {g:"priv", l:"Privacy & offline-first"},
+    {g:"fast", l:"Fast natural-language capture"},
+    {g:"org", l:"Team collaboration"}
   ];
 
   var cur = "pc", timers = [], attempts = 0, t0 = 0, active = {};
@@ -763,13 +526,13 @@ footer a { color: var(--ink); font-weight: 600; }
   function clr() { timers.forEach(clearTimeout); timers = []; }
   function later(f, ms) { timers.push(setTimeout(f, ms)); }
 
-  function log(msg) {
+  function log(m) {
     var li = document.createElement("li");
     var t = document.createElement("time");
     var el = Math.round((Date.now() - t0) / 1000);
     t.textContent = "+" + el + "s";
     li.appendChild(t);
-    li.appendChild(document.createTextNode(msg));
+    li.appendChild(document.createTextNode(m));
     $("log").insertBefore(li, $("log").firstChild);
   }
 
@@ -788,16 +551,19 @@ footer a { color: var(--ink); font-weight: 600; }
     list.forEach(function(x) { c.appendChild(btn(x[0], x[1], x[2], x[3])); });
   }
 
+  function name() {
+    return APPS.filter(function(a) { return a.id === cur; })[0].n;
+  }
+
   function reset() {
     clr();
     attempts = 0;
-    currentMood = 'IDLE_NAP';
     $("log").textContent = "";
     $("verdict").className = "verdict";
     $("verdict").textContent = "";
     $("banner").classList.remove("show");
     $("call").classList.remove("show", "ringing");
-    setCtrl([["Trigger Reminder", start, true]]);
+    setCtrl([["Fire Reminder", start, true]]);
   }
 
   function start() {
@@ -809,61 +575,49 @@ footer a { color: var(--ink); font-weight: 600; }
   }
 
   function push() {
-    currentMood = 'IDLE_NAP';
-    var app = APPS.filter(function(a) { return a.id === cur; })[0];
-    $("bApp").textContent = app.n;
-    $("bIcon").textContent = app.icon;
+    var a = APPS.filter(function(x) { return x.id === cur; })[0];
+    $("bApp").textContent = a.n;
+    $("bIcon").textContent = a.ico;
     $("banner").classList.add("show");
-    log(app.n + " sends passive push notification banner.");
-    playChime();
+    log(a.n + " shows a passive push notification banner.");
 
     setCtrl([
-      ["Tap Notification", function() { end("Opened task. You noticed it only because you were actively looking at the screen.", "good", true); }, true],
-      ["Swipe Away", function() { end("Dismissed with one finger swipe. Zero accountability; task missed.", "bad", true); }, false, true],
-      ["Ignore & Keep Scrolling", waitPush]
+      ["Open Task", function() { end("Opened. You saw it because you were actively looking.", "good", true); }, true],
+      ["Swipe Away", function() { end("Dismissed with one swipe. Nothing else happens; task is missed at 5:00 PM.", "bad", true); }, false, true],
+      ["Keep Scrolling", waitPush]
     ]);
   }
 
   function waitPush() {
     setCtrl([]);
-    log("User continues scrolling feed...");
+    log("You keep scrolling your feed...");
     later(function() {
       $("banner").classList.remove("show");
-      log("Notification banner retreats into notification shade.");
+      log("Banner fades into the notification shade alongside 30 other alerts.");
       later(function() {
-        end("Result: Notification Blindness. Forgotten among 40 other unread badges.", "bad", true);
+        end("Ignored. Notification blindness strikes again: zero follow-up, task forgotten.", "bad", true);
       }, 2000);
     }, 2500);
   }
 
   function ring() {
     attempts++;
-    currentMood = 'ATTENTIVE_CALL';
     $("call").classList.add("show", "ringing");
     $("callSub").textContent = "Incoming Call · Attempt " + attempts + " of 3";
-    log("Astra Telecom Service initiates incoming phone call. Attempt " + attempts + " of 3.");
-    playChime();
-    var chimeInterval = setInterval(playChime, 1600);
-    timers.push(chimeInterval);
+    log("A real Android call rings on the native call screen via Telecom API. Attempt " + attempts + " of 3.");
 
     var ans = function() {
-      clearInterval(chimeInterval);
-      currentMood = 'CELEBRATION';
-      playMeow();
-      end("Call Answered on attempt " + attempts + ". Voice prompt acknowledged task.", "good", true);
+      end("Answered on attempt " + attempts + ". You acknowledged the urgent task.", "good", true);
     };
     var dec = function() {
-      clearInterval(chimeInterval);
       miss();
     };
     var snz = function() {
-      clearInterval(chimeInterval);
-      currentMood = 'IDLE_NAP';
-      end("Task Snoozed for +10 minutes. Exact alarm rescheduled.", "warn", true);
+      end("Task snoozed for +10 minutes. Exact alarm rescheduled.", "warn", true);
     };
 
     setCtrl([
-      ["Answer Call", ans, true],
+      ["Answer", ans, true],
       ["Snooze (+10m)", snz],
       ["Decline", dec, false, true]
     ]);
@@ -873,8 +627,7 @@ footer a { color: var(--ink); font-weight: 600; }
     $("btnSnooze").onclick = snz;
 
     later(function() {
-      log("No answer detected after 6 seconds.");
-      clearInterval(chimeInterval);
+      log("No response detected after 6 seconds.");
       miss();
     }, 6000);
   }
@@ -882,12 +635,11 @@ footer a { color: var(--ink); font-weight: 600; }
   function miss() {
     clr();
     $("call").classList.remove("show", "ringing");
-    currentMood = 'IDLE_NAP';
     if (attempts >= 3) {
-      end("3 Call Attempts Completed. Escalated to high-priority lockscreen badge.", "warn", true);
+      end("Three missed calls logged. Interrupted 3 times until acknowledged.", "warn", true);
       return;
     }
-    log("Call timed out. Telecom scheduler initiating retry in 2.5s...");
+    log("Call missed. Calling again in 2.5s...");
     setCtrl([]);
     later(ring, 2500);
   }
@@ -902,7 +654,7 @@ footer a { color: var(--ink); font-weight: 600; }
     var v = $("verdict");
     v.textContent = msg;
     v.className = "verdict show " + kind;
-    setCtrl([["Restart Simulator", reset, true]]);
+    setCtrl([["Run Again", reset, true]]);
   }
 
   function drawApps() {
@@ -912,7 +664,7 @@ footer a { color: var(--ink); font-weight: 600; }
       var b = document.createElement("button");
       b.type = "button";
       b.className = "chip";
-      b.textContent = x.icon + " " + x.n;
+      b.textContent = x.ico + " " + x.n;
       b.setAttribute("aria-pressed", x.id === cur);
       b.onclick = function() { cur = x.id; drawApps(); reset(); };
       a.appendChild(b);
@@ -920,13 +672,13 @@ footer a { color: var(--ink); font-weight: 600; }
   }
 
   function sym(v) {
-    if (v === 2) return '<span class="v2">Yes / Native</span>';
+    if (v === 2) return '<span class="v2">Yes</span>';
     if (v === 1) return '<span class="v1">Partial</span>';
-    return '<span class="v0">No / Ignorable</span>';
+    return '<span class="v0">No</span>';
   }
 
   function drawTable() {
-    var h = '<thead><tr><th>Capability</th>' + APPS.map(function(a) {
+    var h = '<thead><tr><th>Feature</th>' + APPS.map(function(a) {
       return '<th' + (a.id === "pc" ? ' class="pc"' : '') + '>' + a.n + '</th>';
     }).join("") + '</tr></thead><tbody>';
 
@@ -934,7 +686,7 @@ footer a { color: var(--ink); font-weight: 600; }
 
     ROWS.forEach(function(r) {
       var on = active[r.g];
-      h += '<tr class="' + (on ? "hl" : "") + '"><th>' + r.l + '<br><small style="font-weight:400; opacity:0.75;">' + r.desc + '</small></th>' +
+      h += '<tr class="' + (on ? "hl" : "") + '"><th>' + r.l + '</th>' +
         r.v.map(function(v, i) {
           return '<td' + (i === 0 ? ' class="pc"' : '') + '>' + sym(v) + '</td>';
         }).join("") + '</tr>';
