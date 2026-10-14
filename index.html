@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Productivity Caller vs Traditional Reminder Apps (TickTick, Todoist, Google Tasks)</title>
+<meta name="description" content="Compare Android call-based task reminders with TickTick, Todoist and Google Tasks. Try an interactive simulator and explore offline use, parsing and technical specs.">
+<link rel="canonical" href="https://shivammahajan.com/productivity-caller-simulator/">
   <link rel="canonical" href="https://shivammahajan.com/projects/productivity-caller-vs-alternatives/">
   <meta name="author" content="Shivam Mahajan">
   <meta name="description" content="Interactive simulator and feature comparison: Productivity Caller vs TickTick, Todoist, and Google Tasks. Compare phone call alerts against push notifications.">
@@ -21,7 +23,7 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif}
 main{max-width:1040px;margin:0 auto;padding:28px 18px 56px}
-h1{font-size:clamp(30px,6vw,52px);line-height:1.04;margin:0 0 12px;font-weight:800;letter-spacing:-.02em;max-width:22ch}
+h1{font-size:clamp(30px,5vw,48px);line-height:1.04;margin:0 0 12px;font-weight:800;letter-spacing:-.02em;max-width:32ch;text-wrap:balance}
 h2{font-size:24px;margin:44px 0 6px;font-weight:600}
 p.lead{font-size:18px;color:var(--muted);max-width:60ch;margin:0 0 18px}
 .sub{color:var(--muted);margin:0 0 16px;max-width:62ch}
@@ -62,7 +64,7 @@ th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line);font
 th{font-weight:600}
 th.pc,td.pc{background:color-mix(in srgb,var(--accent) 9%,transparent)}
 tr.hl td,tr.hl th{background:color-mix(in srgb,var(--signal) 28%,transparent)}
-tr.dim{opacity:.45}
+tr.dim{opacity:1}
 .v2{color:var(--good);font-weight:600}.v1{color:var(--warn);font-weight:600}.v0{color:var(--bad)}.vq{color:var(--muted)}
 .score{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:14px 0}
 .s{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
@@ -71,17 +73,26 @@ tr.dim{opacity:.45}
 .bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
 footer{margin-top:44px;color:var(--muted);font-size:14px;max-width:70ch}
 .top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:26px}
+
+nav{display:flex;flex-wrap:wrap;gap:12px 22px;margin:24px 0}a{color:var(--accent);text-underline-offset:3px}p{max-width:72ch}h3{font-size:21px;margin-top:30px}caption{text-align:left;padding:14px;font-weight:600}td{vertical-align:top;min-width:155px}.note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin:22px 0;max-width:75ch}details{padding:18px 0;border-bottom:1px solid var(--line)}summary{cursor:pointer;font-weight:600;min-height:44px}.sources li{margin:10px 0}code{font-size:.88em;overflow-wrap:anywhere}.skip{position:absolute;top:-100px;left:12px;background:var(--card);padding:12px;z-index:5}.skip:focus{top:12px}::selection{background:var(--signal);color:var(--on-signal)}.scroll{scrollbar-color:var(--muted) var(--card)}.chip{min-height:44px}th.pc,td.pc{min-width:200px}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<main>
+<a class="skip" href="#content">Skip to content</a>
+<main id="content">
 <div class="top"><strong>Reminder comparison</strong><button class="chip" id="theme" type="button">Toggle theme</button></div>
-<h1>A real phone call, not a notification. Entirely local.</h1>
+<h1>Productivity Caller vs Traditional Reminder Apps (TickTick, Todoist, Google Tasks)</h1>
 <p class="lead">Push notifications get swiped away alongside spam. Productivity Caller makes your phone ring with a real incoming call on the native Android call screen, using the OS Telecom framework. Everything runs locally on your device: no cloud, no account, no AI service. Try it next to TickTick, Todoist and Google Tasks.</p>
 <a class="cta" href="https://shivammahajan.com/projects/productivity-caller/" target="_blank" rel="noopener">See Productivity Caller</a>
+<nav aria-label="On this page"><a href="#problem">Core problem</a><a href="#comparison">Comparison</a><a href="#technical">Technical specs</a><a href="#sources">Sources &amp; author</a><a href="comparison.md" download>Download Markdown</a></nav>
 <div class="badges"><span>Real Android call</span><span>100% local</span><span>Zero cloud</span><span>Offline-first</span></div>
 
-<h2>Notification simulator</h2>
+<h2 id="problem">The Core Problem: Notification Blindness</h2>
+<p>Task reminders compete with email, social updates and promotions. A push banner can disappear with a swipe even when the task still needs attention. Repeated alerts become background noise.</p>
+<p>Productivity Caller uses the Android Telecom API, a <code>ConnectionService</code> and <code>TelecomManager.addNewIncomingCall()</code> to register a genuine incoming call event locally. The Android call experience asks you to answer or decline. It does not place a cellular call or require a remote caller.</p>
+<aside class="note"><strong>Android behavior varies.</strong> Call presentation and lockscreen wake depend on Android version, device manufacturer, phone-account setup, permissions and notification settings. Telecom integration alone does not guarantee a full-screen wake or bypass Do Not Disturb.</aside>
+<h3>Try the reminder simulator</h3>
+<p class="sub">Browser illustration only. No phone call, sound or task completion is triggered. Retry timing below is compressed for the demo.</p>
 <p class="sub">Pick an app, fire the reminder, then respond the way you really would on a busy afternoon.</p>
 <div class="chips" id="apps" role="group" aria-label="Choose an app"></div>
 <div class="sim">
@@ -98,33 +109,41 @@ footer{margin-top:44px;color:var(--muted);font-size:14px;max-width:70ch}
   </div>
 </div>
 
-<h2>Comparison matrix</h2>
-<p class="sub">Select what matters to you. Matching rows are highlighted and the scores update.</p>
+<h2 id="comparison">Feature Comparison Matrix</h2>
+<p class="sub">Select a priority to highlight relevant rows. Capabilities are described directly; there is no weighted product ranking.</p>
 <div class="chips" id="prefs" role="group" aria-label="What matters to you"></div>
-<div class="score" id="score"></div>
-<div class="scroll"><table id="tbl"></table></div>
-<h2>Under the hood</h2>
-<p class="sub">The call is a real Android incoming call: a ConnectionService registers it with addNewIncomingCall(), exact alarms get through Doze, a full-screen intent wakes a locked screen with the task name, priority and snooze, and a boot receiver reschedules every pending alarm after a reboot.</p>
-<div class="score"><div class="s"><div class="n">25,310</div><div>lines of Kotlin, 76 files</div></div><div class="s"><div class="n">425+</div><div>unit and integration tests</div></div><div class="s"><div class="n">55</div><div>regex patterns, 80+ date and time forms</div></div><div class="s"><div class="n">&lt;3 ms</div><div>to parse a task, no network</div></div></div>
-<p class="sub">Quick add examples: "Call dentist tomorrow at 4:30 pm", "Review PR in 45m", "#work call mum !!!". A bare "7" prompts you to choose AM or PM. Built with Compose, Room, Flow and Hilt, using a deterministic parser rather than AI.</p>
-<footer>The simulator is illustrative: it shows how a passive notification differs from a phone call, not exact behaviour of every app version. Productivity Caller details come from its author. TickTick, Todoist and Google Tasks work offline to a degree but sync through cloud accounts, hence "Partial". "See site" means the detail isn't covered here; check the <a href="https://shivammahajan.com/projects/productivity-caller/" target="_blank" rel="noopener">project page</a>. Traditional-app ratings reflect general, widely known features and may change, so confirm with each vendor.</footer>
+
+<div class="scroll" role="region" aria-label="Feature comparison, scroll horizontally on small screens" tabindex="0"><table id="tbl"></table></div>
+<noscript><p>The interactive matrix needs JavaScript. <a href="comparison.md">Read the complete Markdown comparison</a>.</p></noscript>
+<h2 id="technical">Under the Hood &amp; Technical Metrics</h2>
+<p class="sub">Author-supplied project snapshot. These counts and performance figures are not a fresh audit or benchmark of the current Android codebase.</p>
+<div class="scroll"><table><caption>Android implementation specifications</caption><tbody>
+<tr><th scope="row">Codebase</th><td>25,310 lines of Kotlin · 76 files · 2 Gradle modules</td></tr>
+<tr><th scope="row">Interface</th><td>101 Jetpack Compose functions</td></tr>
+<tr><th scope="row">Data &amp; dependencies</th><td>Room DB · Flow reactivity · Hilt DI</td></tr>
+<tr><th scope="row">Test coverage</th><td>425+ unit &amp; integration tests across 15 test files</td></tr>
+<tr><th scope="row">Deterministic NLP</th><td>55 compiled regex patterns · reported parse time &lt;3 ms · zero cloud/AI latency</td></tr>
+</tbody></table></div>
+<aside class="note"><strong>Parser terminology.</strong> The supplied comparison brief says "80+ Regex Patterns"; its technical specification says "55 compiled regex patterns." This page distinguishes the reported 80+ supported date/time forms from 55 compiled patterns. The counts describe different things and need source confirmation.</aside>
+<details><summary>See parsing examples and scheduling details</summary><p>Quick add examples: "Call dentist tomorrow at 4:30 pm", "Review PR in 45m", "#work call mum !!!". Parsing runs on-device without a cloud or AI request. Zero network latency does not mean zero processing time.</p><p>Exact alarms support scheduled reminders when Android grants the required access. Reboot handling reschedules pending reminders. Device power management and user settings still affect delivery.</p></details>
+<h2 id="sources">Canonical Source &amp; Author Credit</h2>
+<p>Created by <strong>Shivam Mahajan</strong>, Software Engineer.</p>
+<ul class="sources"><li><a href="https://shivammahajan.com/projects/productivity-caller/">Official Case Study</a></li><li><a href="https://shivammahajan.com/projects/productivity-caller-vs-alternatives/">Interactive Alternatives Matrix</a></li><li><a href="https://github.com/smresponsibilities/productivity-caller-simulator">Simulator source repository</a></li></ul>
+<details><summary>Comparison sources and limitations</summary><p>Productivity Caller metrics and local behavior are supplied by its author. Competitor capabilities vary by platform, plan and version. Check current vendor documentation before choosing a product.</p><ul><li><a href="https://ticktick.com/upgrade">TickTick plans</a></li><li><a href="https://www.todoist.com/pricing">Todoist plans</a></li><li><a href="https://support.google.com/tasks/">Google Tasks help</a></li><li><a href="https://developer.android.com/reference/android/telecom/TelecomManager#addNewIncomingCall(android.telecom.PhoneAccountHandle,%20android.os.Bundle)">Android Telecom API</a></li></ul><p>Subscription amounts vary by region and billing term, so this comparison lists plan models instead of an unverified price.</p></details>
+<footer>Independent comparison by the Productivity Caller creator. Simulator behavior is illustrative, including retries and notification dismissal. Other apps may offer persistent or recurring reminders. Acknowledging a call does not mean the task is complete.</footer>
 </main>
 <script>
 (function(){
-var APPS=[{id:"tt",n:"TickTick"},{id:"td",n:"Todoist"},{id:"gt",n:"Google Tasks"},{id:"pc",n:"Productivity Caller"}];
+var APPS=[{id:"pc",n:"Productivity Caller"},{id:"tt",n:"TickTick"},{id:"td",n:"Todoist"},{id:"gt",n:"Google Tasks"}];
 var ROWS=[
-{k:"timed",l:"Reminder at a set time",v:[2,2,2,2]},
-{k:"call",l:"A real native Android call (Telecom API), not a notification",v:[0,0,0,2],g:"call"},
-{k:"hard",l:"Hard to ignore or swipe away",v:[0,0,0,2],g:"call"},
-{k:"nudge",l:"Accountability-style nudge",v:[0,0,0,2],g:"call"},
-{k:"proj",l:"Projects, labels and filters",v:[2,2,1,1],g:"org"},
-{k:"team",l:"Sharing and collaboration",v:[2,2,1,-1],g:"org"},
-{k:"cal",l:"Calendar integration",v:[2,2,2,-1],g:"org"},
-{k:"off",l:"Runs locally: fully offline, no cloud account",v:[1,1,1,2],g:"priv"},
-{k:"nlp",l:"Natural-language quick add (dates, tags, priority)",v:[2,2,0,2],g:"fast"},
-{k:"plat",l:"Also on iOS, web and desktop",v:[2,2,2,0]}
+{k:'alert',l:'Alert Type',v:['Incoming phone call via Android Telecom', 'Push banner; additional reminder modes available', 'Push banner', 'Push banner'],g:'call'},
+{k:'wake',l:'Lockscreen Wake',v:['Call / full-screen presentation when permitted', 'Notification / alert settings dependent', 'Notification settings dependent', 'Notification settings dependent'],g:'call'},
+{k:'offline',l:'100% Offline / No Account',v:['Yes, author-reported; local storage and parsing', 'Offline use available; account-free scope varies', 'Offline use with a Todoist account', 'Google account required'],g:'priv'},
+{k:'nlp',l:'Natural Language Parsing (80+ Regex Patterns*)',v:['Reported 80+ forms; 55 compiled regex patterns', 'Natural-language date input', 'Natural-language date input', 'No comparable free-text date parser'],g:'fast'},
+{k:'cost',l:'Subscription Cost',v:['Current pricing: see official case study', 'Free tier; optional Premium subscription', 'Free tier; optional paid subscriptions', 'Free with Google account'],g:'cost'},
+{k:'org',l:'Best-fit workflow',v:['Android call-based task reminders', 'Tasks, habits and planning', 'Projects and collaborative task management', 'Simple tasks within Google tools'],g:'org'}
 ];
-var PREFS=[{g:"call",l:"Reminders I can't ignore"},{g:"org",l:"Deep task organisation"},{g:"priv",l:"Privacy and offline"},{g:"fast",l:"Fast capture"}];
+var PREFS=[{g:"call",l:"Call-based reminders"},{g:"org",l:"Deep task organisation"},{g:"priv",l:"Privacy and offline"},{g:"fast",l:"Fast capture"}];
 var cur="pc",timers=[],attempts=0,t0=0,active={};
 var $=function(i){return document.getElementById(i)};
 function clr(){timers.forEach(clearTimeout);timers=[]}
@@ -135,13 +154,13 @@ function setCtrl(list){var c=$("ctrl");c.textContent="";list.forEach(function(x)
 function name(){return APPS.filter(function(a){return a.id===cur})[0].n}
 function reset(){clr();attempts=0;$("log").textContent="";$("verdict").textContent="";$("banner").classList.remove("show");$("call").classList.remove("show","ringing");
  setCtrl([["Fire reminder",start,true]])}
-function start(){t0=Date.now();$("log").textContent="";$("verdict").textContent="";cur==="pc"?ring():push()}
+function start(){clr();attempts=0;t0=Date.now();$("log").textContent="";$("verdict").textContent="";cur==="pc"?ring():push()}
 function push(){
  $("bApp").textContent=name();$("bText").textContent="Reminder: Send invoice to client";$("banner").classList.add("show");
  log(name()+" shows a banner notification.");
- setCtrl([["Open task",function(){end("Opened. You saw it, because you looked.","good",true)},true],["Swipe away",function(){end("Dismissed. Nothing else will happen, and the task is still open at 5:00 PM.","bad",true)}],["Keep scrolling",wait]]);
+ setCtrl([["Open task",function(){end("Opened. You saw it, because you looked.","good",true)},true],["Swipe away",function(){end("Dismissed in this demo. The task remains open; real apps may support repeat reminders.","bad",true)}],["Keep scrolling",wait]]);
 }
-function wait(){setCtrl([]);log("You keep scrolling…");later(function(){$("banner").classList.remove("show");log("Banner fades into the notification shade.");later(function(){end("Ignored. The reminder is now one of many unread notifications. No follow-up.","bad",true)},2500)},3500)}
+function wait(){setCtrl([]);log("You keep scrolling…");later(function(){$("banner").classList.remove("show");log("Banner fades into the notification shade.");later(function(){end("Ignored in this demo. The reminder is in the notification shade; follow-up depends on the app and settings.","bad",true)},2500)},3500)}
 function end(msg,kind,hide){clr();if(hide)$("banner").classList.remove("show");$("call").classList.remove("show","ringing");log(msg);var v=$("verdict");v.textContent=msg;v.style.color="var(--"+kind+")";setCtrl([["Run again",reset,true]])}
 function ring(){
  attempts++;$("call").classList.add("show","ringing");$("callSub").textContent="Incoming call… (attempt "+attempts+" of 3)";
@@ -153,14 +172,12 @@ function miss(){clr();$("call").classList.remove("show","ringing");
  if(attempts>=3){end("Three missed calls. It's logged as missed, but you were interrupted three times.","warn");return}
  log("Call missed. Calling again shortly…");setCtrl([]);later(ring,2500)}
 function drawApps(){var a=$("apps");a.textContent="";APPS.forEach(function(x){var b=document.createElement("button");b.type="button";b.className="chip";b.textContent=x.n;b.setAttribute("aria-pressed",x.id===cur);b.onclick=function(){cur=x.id;drawApps();reset()};a.appendChild(b)})}
-function sym(v){return v===2?'<span class="v2">Yes</span>':v===1?'<span class="v1">Partial</span>':v===0?'<span class="v0">No</span>':'<span class="vq">See site</span>'}
 function drawTable(){
- var h='<thead><tr><th scope="col">Feature</th>'+APPS.map(function(a){return '<th scope="col"'+(a.id==="pc"?' class="pc"':'')+'>'+a.n+'</th>'}).join("")+'</tr></thead><tbody>';
+ var h='<caption>Productivity Caller, TickTick, Todoist and Google Tasks</caption><thead><tr><th scope="col">Feature</th>'+APPS.map(function(a){return '<th scope="col"'+(a.id==="pc"?' class="pc"':'')+'>'+a.n+'</th>'}).join("")+'</tr></thead><tbody>';
  var any=Object.keys(active).some(function(k){return active[k]});
- ROWS.forEach(function(r){var on=active[r.g];h+='<tr class="'+(on?"hl":any&&r.g?"dim":"")+'"><th scope="row">'+r.l+'</th>'+r.v.map(function(v,i){return '<td'+(i===3?' class="pc"':'')+'>'+sym(v)+'</td>'}).join("")+'</tr>'});
+ ROWS.forEach(function(r){var on=active[r.g];h+='<tr class="'+(on?"hl":any&&r.g?"dim":"")+'"><th scope="row">'+r.l+'</th>'+r.v.map(function(v,i){return '<td'+(i===0?' class="pc"':'')+'>'+v+'</td>'}).join("")+'</tr>'});
  $("tbl").innerHTML=h+'</tbody>';
- var rows=ROWS.filter(function(r){return !any||active[r.g]});
- $("score").innerHTML=APPS.map(function(a,i){var s=0,m=rows.length*2;rows.forEach(function(r){if(r.v[i]>0)s+=r.v[i]});var p=Math.round(100*s/m);return '<div class="s"><div>'+a.n+'</div><div class="n">'+p+'%</div><div class="bar"><i style="width:'+p+'%"></i></div></div>'}).join("")}
+}
 function drawPrefs(){var p=$("prefs");p.textContent="";PREFS.forEach(function(x){var b=document.createElement("button");b.type="button";b.className="chip";b.textContent=x.l;b.setAttribute("aria-pressed",!!active[x.g]);b.onclick=function(){active[x.g]=!active[x.g];drawPrefs();drawTable()};p.appendChild(b)})}
 $("theme").onclick=function(){var r=document.documentElement,d=r.getAttribute("data-theme");var dark=d?d==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.setAttribute("data-theme",dark?"light":"dark")};
 drawApps();drawPrefs();drawTable();reset();
