@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Productivity Caller vs Traditional Reminder Apps (TickTick, Todoist, Google Tasks)</title>
+  <link rel="canonical" href="https://shivammahajan.com/projects/productivity-caller-vs-alternatives/">
+  <meta name="author" content="Shivam Mahajan">
+  <meta name="description" content="Interactive simulator and feature comparison: Productivity Caller vs TickTick, Todoist, and Google Tasks. Compare phone call alerts against push notifications.">
+  <meta property="og:title" content="Productivity Caller vs Traditional Reminder Apps">
+  <meta property="og:description" content="Compare Android phone call reminders vs push notification blindness. Built by Shivam Mahajan.">
+  <meta property="og:url" content="https://shivammahajan.com/projects/productivity-caller-vs-alternatives/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EDF0F7;--ink:#121A33;--card:#fff;--line:#CBD2E3;--muted:#55607e;--accent:#2B4BFF;--on-accent:#fff;--signal:#FFC62E;--on-signal:#121A33;--good:#12805C;--warn:#A86A00;--bad:#B3261E;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1325;--ink:#E8ECFA;--card:#171E38;--line:#2B3556;--muted:#9AA6C8;--accent:#7C92FF;--on-accent:#0E1325;--good:#4FD1A1;--warn:#F2B84B;--bad:#FF8A80}}
+:root[data-theme="dark"]{--bg:#0E1325;--ink:#E8ECFA;--card:#171E38;--line:#2B3556;--muted:#9AA6C8;--accent:#7C92FF;--on-accent:#0E1325;--good:#4FD1A1;--warn:#F2B84B;--bad:#FF8A80}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1040px;margin:0 auto;padding:28px 18px 56px}
+h1{font-size:clamp(30px,6vw,52px);line-height:1.04;margin:0 0 12px;font-weight:800;letter-spacing:-.02em;max-width:22ch}
+h2{font-size:24px;margin:44px 0 6px;font-weight:600}
+p.lead{font-size:18px;color:var(--muted);max-width:60ch;margin:0 0 18px}
+.sub{color:var(--muted);margin:0 0 16px;max-width:62ch}
+a.cta{display:inline-block;background:var(--accent);color:var(--on-accent);padding:12px 20px;border-radius:10px;font-weight:600;text-decoration:none}
+a.cta:hover{filter:brightness(1.08)}
+:focus-visible{outline:3px solid var(--signal);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}.badges{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}.badges span{background:var(--signal);color:var(--on-signal);font-weight:600;padding:6px 12px;border-radius:999px;font-size:14px}
+.chip{border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:999px;font:inherit;font-size:15px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.sim{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:28px;align-items:start}
+@media(max-width:720px){.sim{grid-template-columns:1fr}}
+.phone{width:100%;max-width:300px;aspect-ratio:9/17;margin:0 auto;border:8px solid var(--ink);border-radius:36px;background:#0b1020;color:#fff;position:relative;overflow:hidden}
+.phone .time{text-align:center;padding-top:34px;font-size:54px;font-weight:200;line-height:1}
+.phone .date{text-align:center;font-size:13px;opacity:.7;margin-top:4px}
+.banner{position:absolute;left:10px;right:10px;top:-120px;background:rgba(255,255,255,.94);color:#111;border-radius:16px;padding:10px 12px;font-size:13px;transition:top .35s}
+.banner.show{top:150px}
+.banner b{display:block;font-size:12px;opacity:.65;font-weight:600}
+.call{position:absolute;inset:0;background:#101419;display:none;flex-direction:column;justify-content:space-between;padding:12px 16px 26px}
+.call.show{display:flex}
+.avatar{width:92px;height:92px;border-radius:50%;background:var(--signal);color:var(--on-signal);display:grid;place-items:center;font-size:34px;font-weight:600;margin:14px auto 16px}
+.ringing .avatar{animation:ring 1s infinite}
+@keyframes ring{0%,100%{box-shadow:0 0 0 0 rgba(255,198,46,.6)}50%{box-shadow:0 0 0 22px rgba(255,198,46,0)}}
+@media(prefers-reduced-motion:reduce){.ringing .avatar{animation:none}.banner{transition:none}}
+.call small{opacity:.75}.sb{display:flex;justify-content:space-between;font-size:11px;opacity:.85}.ctop{text-align:center;font-size:14px;margin-top:10px}.cmid{text-align:center}.cname{font-size:26px;font-weight:400;line-height:1.15}.csub{font-size:14px;opacity:.75;margin-top:4px}.ctask{font-size:13px;margin:14px auto 0;padding:6px 12px;border-radius:999px;background:#1f2630;display:inline-block}.cbtns{display:flex;justify-content:space-around}.cwrap{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:13px}.cb{width:64px;height:64px;border-radius:50%;border:0;display:grid;place-items:center;cursor:pointer}.cb svg{width:28px;height:28px;fill:#fff}.cb.red{background:#E5484D}.cb.red svg{transform:rotate(135deg)}.cb.green{background:#2EB872}.ringing .cb.green{animation:ring 1s infinite}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.task{font-weight:600;margin:0 0 10px}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+button.act{font:inherit;font-weight:600;border-radius:10px;padding:10px 16px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+button.act.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+button.act:disabled{opacity:.4;cursor:not-allowed}
+.log{list-style:none;margin:12px 0 0;padding:0;font-size:15px;max-height:230px;overflow:auto}
+.log li{padding:6px 0;border-top:1px solid var(--line)}
+.log time{color:var(--muted);margin-right:8px;font-variant-numeric:tabular-nums}
+.verdict{margin-top:10px;font-weight:600}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:640px}
+th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line);font-size:15px}
+th{font-weight:600}
+th.pc,td.pc{background:color-mix(in srgb,var(--accent) 9%,transparent)}
+tr.hl td,tr.hl th{background:color-mix(in srgb,var(--signal) 28%,transparent)}
+tr.dim{opacity:.45}
+.v2{color:var(--good);font-weight:600}.v1{color:var(--warn);font-weight:600}.v0{color:var(--bad)}.vq{color:var(--muted)}
+.score{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:14px 0}
+.s{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
+.s .n{font-size:30px;font-weight:800;line-height:1}
+.bar{height:6px;background:var(--line);border-radius:4px;margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+footer{margin-top:44px;color:var(--muted);font-size:14px;max-width:70ch}
+.top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:26px}
+</style>
+</head>
+<body>
+<main>
+<div class="top"><strong>Reminder comparison</strong><button class="chip" id="theme" type="button">Toggle theme</button></div>
+<h1>A real phone call, not a notification. Entirely local.</h1>
+<p class="lead">Push notifications get swiped away alongside spam. Productivity Caller makes your phone ring with a real incoming call on the native Android call screen, using the OS Telecom framework. Everything runs locally on your device: no cloud, no account, no AI service. Try it next to TickTick, Todoist and Google Tasks.</p>
+<a class="cta" href="https://shivammahajan.com/projects/productivity-caller/" target="_blank" rel="noopener">See Productivity Caller</a>
+<div class="badges"><span>Real Android call</span><span>100% local</span><span>Zero cloud</span><span>Offline-first</span></div>
+
+<h2>Notification simulator</h2>
+<p class="sub">Pick an app, fire the reminder, then respond the way you really would on a busy afternoon.</p>
+<div class="chips" id="apps" role="group" aria-label="Choose an app"></div>
+<div class="sim">
+  <div class="phone" id="phone" aria-hidden="true">
+    <div class="time">4:58</div><div class="date">Wednesday</div>
+    <div class="banner" id="banner"><b id="bApp"></b><span id="bText"></span></div>
+    <div class="call" id="call"><div><div class="sb"><span>4:58</span><span>5G ▂▄▆ 82%</span></div><div class="ctop"><small id="callSub">Incoming call</small></div></div><div class="cmid"><div class="avatar">PC</div><div class="cname">Productivity Caller</div><div class="csub">Task reminder · High priority</div><div class="ctask">Send invoice to client, due 5:00 PM</div></div><div class="cbtns"><div class="cwrap"><button type="button" class="cb red" id="btnDec" tabindex="-1" aria-label="Decline"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></button><span>Decline</span></div><div class="cwrap"><button type="button" class="cb green" id="btnAns" tabindex="-1" aria-label="Answer"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></button><span>Answer</span></div></div></div>
+  </div>
+  <div class="panel">
+    <p class="task">Task: Send invoice to client (due 5:00 PM)</p>
+    <div class="btns" id="ctrl"></div>
+    <div class="verdict" id="verdict" aria-live="polite"></div>
+    <ul class="log" id="log" aria-live="polite"></ul>
+  </div>
+</div>
+
+<h2>Comparison matrix</h2>
+<p class="sub">Select what matters to you. Matching rows are highlighted and the scores update.</p>
+<div class="chips" id="prefs" role="group" aria-label="What matters to you"></div>
+<div class="score" id="score"></div>
+<div class="scroll"><table id="tbl"></table></div>
+<h2>Under the hood</h2>
+<p class="sub">The call is a real Android incoming call: a ConnectionService registers it with addNewIncomingCall(), exact alarms get through Doze, a full-screen intent wakes a locked screen with the task name, priority and snooze, and a boot receiver reschedules every pending alarm after a reboot.</p>
+<div class="score"><div class="s"><div class="n">25,310</div><div>lines of Kotlin, 76 files</div></div><div class="s"><div class="n">425+</div><div>unit and integration tests</div></div><div class="s"><div class="n">55</div><div>regex patterns, 80+ date and time forms</div></div><div class="s"><div class="n">&lt;3 ms</div><div>to parse a task, no network</div></div></div>
+<p class="sub">Quick add examples: "Call dentist tomorrow at 4:30 pm", "Review PR in 45m", "#work call mum !!!". A bare "7" prompts you to choose AM or PM. Built with Compose, Room, Flow and Hilt, using a deterministic parser rather than AI.</p>
+<footer>The simulator is illustrative: it shows how a passive notification differs from a phone call, not exact behaviour of every app version. Productivity Caller details come from its author. TickTick, Todoist and Google Tasks work offline to a degree but sync through cloud accounts, hence "Partial". "See site" means the detail isn't covered here; check the <a href="https://shivammahajan.com/projects/productivity-caller/" target="_blank" rel="noopener">project page</a>. Traditional-app ratings reflect general, widely known features and may change, so confirm with each vendor.</footer>
+</main>
+<script>
+(function(){
+var APPS=[{id:"tt",n:"TickTick"},{id:"td",n:"Todoist"},{id:"gt",n:"Google Tasks"},{id:"pc",n:"Productivity Caller"}];
+var ROWS=[
+{k:"timed",l:"Reminder at a set time",v:[2,2,2,2]},
+{k:"call",l:"A real native Android call (Telecom API), not a notification",v:[0,0,0,2],g:"call"},
+{k:"hard",l:"Hard to ignore or swipe away",v:[0,0,0,2],g:"call"},
+{k:"nudge",l:"Accountability-style nudge",v:[0,0,0,2],g:"call"},
+{k:"proj",l:"Projects, labels and filters",v:[2,2,1,1],g:"org"},
+{k:"team",l:"Sharing and collaboration",v:[2,2,1,-1],g:"org"},
+{k:"cal",l:"Calendar integration",v:[2,2,2,-1],g:"org"},
+{k:"off",l:"Runs locally: fully offline, no cloud account",v:[1,1,1,2],g:"priv"},
+{k:"nlp",l:"Natural-language quick add (dates, tags, priority)",v:[2,2,0,2],g:"fast"},
+{k:"plat",l:"Also on iOS, web and desktop",v:[2,2,2,0]}
+];
+var PREFS=[{g:"call",l:"Reminders I can't ignore"},{g:"org",l:"Deep task organisation"},{g:"priv",l:"Privacy and offline"},{g:"fast",l:"Fast capture"}];
+var cur="pc",timers=[],attempts=0,t0=0,active={};
+var $=function(i){return document.getElementById(i)};
+function clr(){timers.forEach(clearTimeout);timers=[]}
+function later(f,ms){timers.push(setTimeout(f,ms))}
+function log(m){var li=document.createElement("li"),t=document.createElement("time");var el=Math.round((Date.now()-t0)/1000);t.textContent="+"+el+"s";li.appendChild(t);li.appendChild(document.createTextNode(m));$("log").insertBefore(li,$("log").firstChild)}
+function btn(label,fn,pri){var b=document.createElement("button");b.type="button";b.className="act"+(pri?" primary":"");b.textContent=label;b.onclick=fn;return b}
+function setCtrl(list){var c=$("ctrl");c.textContent="";list.forEach(function(x){c.appendChild(btn(x[0],x[1],x[2]))})}
+function name(){return APPS.filter(function(a){return a.id===cur})[0].n}
+function reset(){clr();attempts=0;$("log").textContent="";$("verdict").textContent="";$("banner").classList.remove("show");$("call").classList.remove("show","ringing");
+ setCtrl([["Fire reminder",start,true]])}
+function start(){t0=Date.now();$("log").textContent="";$("verdict").textContent="";cur==="pc"?ring():push()}
+function push(){
+ $("bApp").textContent=name();$("bText").textContent="Reminder: Send invoice to client";$("banner").classList.add("show");
+ log(name()+" shows a banner notification.");
+ setCtrl([["Open task",function(){end("Opened. You saw it, because you looked.","good",true)},true],["Swipe away",function(){end("Dismissed. Nothing else will happen, and the task is still open at 5:00 PM.","bad",true)}],["Keep scrolling",wait]]);
+}
+function wait(){setCtrl([]);log("You keep scrolling…");later(function(){$("banner").classList.remove("show");log("Banner fades into the notification shade.");later(function(){end("Ignored. The reminder is now one of many unread notifications. No follow-up.","bad",true)},2500)},3500)}
+function end(msg,kind,hide){clr();if(hide)$("banner").classList.remove("show");$("call").classList.remove("show","ringing");log(msg);var v=$("verdict");v.textContent=msg;v.style.color="var(--"+kind+")";setCtrl([["Run again",reset,true]])}
+function ring(){
+ attempts++;$("call").classList.add("show","ringing");$("callSub").textContent="Incoming call… (attempt "+attempts+" of 3)";
+ log("A real Android call rings on the native call screen, triggered locally. Attempt "+attempts+" of 3.");
+ var ans=function(){end("Answered on attempt "+attempts+". You acknowledged the task.","good")};setCtrl([["Answer",ans,true],["Decline",miss]]);$("btnAns").onclick=ans;$("btnDec").onclick=miss;
+ later(function(){log("No response.");miss()},6000);
+}
+function miss(){clr();$("call").classList.remove("show","ringing");
+ if(attempts>=3){end("Three missed calls. It's logged as missed, but you were interrupted three times.","warn");return}
+ log("Call missed. Calling again shortly…");setCtrl([]);later(ring,2500)}
+function drawApps(){var a=$("apps");a.textContent="";APPS.forEach(function(x){var b=document.createElement("button");b.type="button";b.className="chip";b.textContent=x.n;b.setAttribute("aria-pressed",x.id===cur);b.onclick=function(){cur=x.id;drawApps();reset()};a.appendChild(b)})}
+function sym(v){return v===2?'<span class="v2">Yes</span>':v===1?'<span class="v1">Partial</span>':v===0?'<span class="v0">No</span>':'<span class="vq">See site</span>'}
+function drawTable(){
+ var h='<thead><tr><th scope="col">Feature</th>'+APPS.map(function(a){return '<th scope="col"'+(a.id==="pc"?' class="pc"':'')+'>'+a.n+'</th>'}).join("")+'</tr></thead><tbody>';
+ var any=Object.keys(active).some(function(k){return active[k]});
+ ROWS.forEach(function(r){var on=active[r.g];h+='<tr class="'+(on?"hl":any&&r.g?"dim":"")+'"><th scope="row">'+r.l+'</th>'+r.v.map(function(v,i){return '<td'+(i===3?' class="pc"':'')+'>'+sym(v)+'</td>'}).join("")+'</tr>'});
+ $("tbl").innerHTML=h+'</tbody>';
+ var rows=ROWS.filter(function(r){return !any||active[r.g]});
+ $("score").innerHTML=APPS.map(function(a,i){var s=0,m=rows.length*2;rows.forEach(function(r){if(r.v[i]>0)s+=r.v[i]});var p=Math.round(100*s/m);return '<div class="s"><div>'+a.n+'</div><div class="n">'+p+'%</div><div class="bar"><i style="width:'+p+'%"></i></div></div>'}).join("")}
+function drawPrefs(){var p=$("prefs");p.textContent="";PREFS.forEach(function(x){var b=document.createElement("button");b.type="button";b.className="chip";b.textContent=x.l;b.setAttribute("aria-pressed",!!active[x.g]);b.onclick=function(){active[x.g]=!active[x.g];drawPrefs();drawTable()};p.appendChild(b)})}
+$("theme").onclick=function(){var r=document.documentElement,d=r.getAttribute("data-theme");var dark=d?d==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.setAttribute("data-theme",dark?"light":"dark")};
+drawApps();drawPrefs();drawTable();reset();
+})();
+</script>
+</body>
+</html>
